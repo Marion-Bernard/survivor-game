@@ -23,7 +23,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element = {<Menu version='0.0'/>}/>
+        <Route path="/survivor-game" element = {<Menu version='0.0'/>}/>
         <Route path="/game" element = {<Game />}/>
         <Route path="/gameover" element = {<GameOver scoreBoard={scoreBoard} updateScoreBoard={updateScoreBoard}/>}/>
         <Route path="*" element = {<NotFound/>}/>
