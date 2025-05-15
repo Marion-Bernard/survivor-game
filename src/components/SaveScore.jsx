@@ -6,15 +6,13 @@ import { usePlayground } from "../store/Playground"
 export function SaveScore({scoreBoard, updateScoreBoard}){
 
   const { score } = usePlayground();
-  console.log(score)
-
-  const [name, setName] = useState("")
-  const [isSubmit, setSubmit]= useState(false)
+  const [name, setName] = useState("");
+  const [isSubmit, setSubmit]= useState(false);
 
   function handleSubmit(e){
-    e.preventDefault()
-    updateScoreBoard(e.target.name.value, score)
-    setSubmit(true)
+    e.preventDefault();
+    updateScoreBoard(e.target.name.value, score);
+    setSubmit(true);
   }
 
   function isTopScore({score}) {

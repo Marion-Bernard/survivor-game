@@ -1,19 +1,15 @@
 import { Cell } from "./Partials/Cell";
 import { usePlayground } from "../store/Playground";
 
-export function Map({onAddHouse}){
-  const {playground} = usePlayground()
-  
-  function handleClick(position){
-    onAddHouse('house',position)
-  }
+export function Map(){
+  const {updatePlayground, playground} = usePlayground()
 
-   return (
+  return (
     <div className= "">
       {playground.map((row, rowIndex) => (
         <div key= {rowIndex} className= "flex flex-row">
           {row.map((cell, colIndex) => (
-            <Cell key={`${rowIndex}+${colIndex}`} cell={cell} onClick={()=>handleClick({x:colIndex, y:rowIndex})}/>
+            <Cell key={`${rowIndex}+${colIndex}`} cell={cell} onClick={()=>updatePlayground({x:colIndex, y:rowIndex})}/>
           ))}
         </div>
       ))}

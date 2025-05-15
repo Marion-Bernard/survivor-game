@@ -12,8 +12,8 @@ export function Game() {
 
   const navigate = useNavigate();
   
-  const { food, addFood, people } = useResource();
-  const { updatePlayground , changeScore } = usePlayground();
+  const { food, addFood, addWood, people, getAvailablePeople } = useResource();
+  const { changeScore } = usePlayground();
 
   const [time, setTime] = useState(0);
   const [quests, setQuests] = useState([
@@ -65,12 +65,18 @@ export function Game() {
   //Toute les 10 secondes, on diminue la nourriture de people, et on regarde si on a perdu
   useEffect(() => {
       if (time % 10 === 0 && time != 0) {
-        addFood(- people[1])
-        //if(food - people[1] < 0) { setTimeout(() => {onGameOver(time)}, 2)}
-        if(food - people[1] < 0)   {
+        addFood(- people)
+        //if(food - people < 0) { setTimeout(() => {onGameOver(time)}, 2)}
+        if(food - people < 0)   {
           changeScore(time)
           navigate('/gameover');
         }
+      }
+
+      if (time % 5 === 0 && time != 0) {
+        const forestPeople = people - getAvailablePeople();
+        addFood(forestPeople);
+        addWood(forestPeople)
       }
     }
     ,[time])
@@ -85,10 +91,6 @@ export function Game() {
     );
   }
 
-  function handleAddHouse(newType,position){
-    updatePlayground(newType,position)
-  }
-
   return (
     <div className="">
       <Button text='Retourner au menu' onClick={()=> navigate("/")} color="light" iconSrc={ReturnIcon} />
@@ -99,7 +101,7 @@ export function Game() {
             <ResourceBar />
             <p className="mb-4 font-bold text-lg">Temps de survie : {time}s</p>
           </div>
-          <Map onAddHouse={handleAddHouse}/>
+          <Map />
         </div>
       </div>
     </div>

@@ -9,7 +9,7 @@ export function ResourceBar() {
   return (
     <div className=" mb-4 w-fit px-6 py-2 bg-white/90 border border-gray-900 rounded-xl shadow-md">
       <div className="flex gap-6 items-center">
-        <Resource type="people" img={TigerIcon} value={useResource.getState().people} />
+        <Resource type="people" img={TigerIcon} value={useResource.getState().getAvailablePeople()} />
         <Resource type="wood" img={WoodIcon} value={useResource.getState().wood} />
         <Resource type="food" img={FoodIcon} value={useResource.getState().food} />
         <Resource type="stone" img={StoneIcon} value={useResource.getState().stone} />
