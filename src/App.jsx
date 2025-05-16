@@ -23,7 +23,7 @@ function App() {
 
 
   return (
-    <BrowserRouter basename='/survivor-game/'>
+    <BrowserRouter basename='/survivor-game'>
       <Routes>
         <Route path="/" element = {<Menu version='0.0'/>}/>
         <Route path="/game" element = {<Game />}/>
