@@ -29,7 +29,6 @@ export const useResource = create((set, get) => ({
 
   /*PEOPLE*/
   people: 2,
-  //people devient juste un chiffre pour représenter le nombre tot de gens
   addPeople: (nbPeople) => {
     set((state) => ({
       people:  Math.max(0, state.people + nbPeople)
@@ -37,30 +36,25 @@ export const useResource = create((set, get) => ({
   },
   getAvailablePeople: () => {
     const people = get().people
-    const playground = usePlayground.getState().playground;
-    const busyPeoples = playground.flat().filter(cell => cell.people > 0)
-    const busyPeople = busyPeoples.reduce((acc, cell) => acc + cell.people, 0);
+    const workers = get().getWorkers()
+    const nbBusyPeople = Object.values(workers).reduce((acc, worker) => acc + worker, 0);
   
-    return people - busyPeople
+    return people - nbBusyPeople
+  },
+
+  getWorkers : () => {
+    const playground = usePlayground.getState().playground;
+    const workers = playground.flat().reduce((acc, item) => {
+      if (!acc[item.type]) {
+        acc[item.type] = 0;
+      }
+      acc[item.type] += item.people;
+      return acc;
+    }, {});
+    
+    return workers
   },
   
-  //  addFreePeople: (x) => {
-  //   set((state) => ({
-  //     people: [
-  //       Math.max(0, state.people[0] + x),
-  //       state.people[1],
-  //     ]
-  //   }));
-  // },
-  
-  // addBusyPeople: (x) => {
-  //   set((state) => ({
-  //     people: [
-  //       Math.max(0, state.people[1] + x),
-  //     ]
-  //   }));
-  // },
-
   initResource: (people= 2, food= 14, stone= 0, wood= 46) => set({ 
     people,
     food,

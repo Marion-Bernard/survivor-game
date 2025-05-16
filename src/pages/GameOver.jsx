@@ -36,7 +36,7 @@ export function GameOver({ scoreBoard, updateScoreBoard}){
       </div>
       
       <div className="flex-grow w-full flex flex-col items-center">
-        <h2 className="text-lg font-semibold mb-4">Ton score : {score}s</h2>
+        <h2 className="text-lg font-semibold mb-4">Ton score : {score}</h2>
         <SaveScore scoreBoard={scoreBoard} updateScoreBoard={updateScoreBoard} />
       </div>
       

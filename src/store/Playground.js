@@ -1,18 +1,21 @@
 import { create } from "zustand";
 import { useResource } from "./Resources";
 
-
-const newPlayground = Array.from({ length: 5 }, () => Array.from({ length: 5 }, () => ({type: "empty", people:0 })));
-newPlayground[1][2] = {type:'forest', people:0};
-newPlayground[2][3] = {type:'forest', people:0};
-
 export const usePlayground = create((set, get) => ({
-  playground: newPlayground,
+  playground: [],
+  generateRandomCell : (nb,type,playground) => {
+    for (let i = 0 ; i < nb ; i++) {
+      let x = Math.floor(Math.random() * playground.length);
+      let y = Math.floor(Math.random() * playground.length);
+      playground[x][y] = {type:type, people:0};
+    }
+    return playground
+  },
   initPlayground: (row,col) => {
-
-    const newPlayground = Array.from({ length: row }, () => Array.from({ length: col }, () => ({type: "empty", people: 0 })));
-    newPlayground[1][2] = {type:'forest', people:0};
-    newPlayground[2][3] = {type:'forest', people:0};
+    let newPlayground = Array.from({ length: row }, () => Array.from({ length: col }, () => ({type: "empty", people: 0 })));
+    newPlayground = get().generateRandomCell(2,'forest',newPlayground);
+    newPlayground = get().generateRandomCell(1,'mountain',newPlayground);
+    newPlayground = get().generateRandomCell(1,'food',newPlayground);
     set({ playground: newPlayground });
   },
 
@@ -22,19 +25,17 @@ export const usePlayground = create((set, get) => ({
     const cell = updatedPlayground[position.y][position.x];
     
     // if (cell.type != 'empty') return
-        
     if (cell.type === 'empty' && useResource.getState().wood >= 5){
       cell.type = 'house'
       useResource.getState().addWood(-5)
       useResource.getState().addPeople(2)
       updatedPlayground[position.y][position.x] = cell;
-    } else if (cell.type === 'forest' && useResource.getState().getAvailablePeople() >= 1 ) {
+    } else if ((cell.type !== 'house') && useResource.getState().getAvailablePeople() >= 1 ) {
       cell.people += 1
       updatedPlayground[position.y][position.x] = cell;
     } else {
       return
     }
-
 
     set(() => ({
       playground: updatedPlayground})

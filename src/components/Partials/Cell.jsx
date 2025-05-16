@@ -1,12 +1,14 @@
 import HouseIcon from "../../assets/img/icons/cabin.svg"
 import ForestIcon from "../../assets/img/icons/tree.svg"
 import FoodIcon from "../../assets/img/icons/fish-plate.svg"
+import MountainIcon from "../../assets/img/icons/mountain.svg"
 
 export function Cell({cell,onClick}){
   const icons = {
     forest: ForestIcon,
     house: HouseIcon,
-    food: FoodIcon
+    food: FoodIcon,
+    mountain : MountainIcon
   }
 
   return (

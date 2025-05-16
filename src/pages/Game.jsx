@@ -12,7 +12,7 @@ export function Game() {
 
   const navigate = useNavigate();
   
-  const { food, addFood, addWood, people, getAvailablePeople } = useResource();
+  const { food, addFood, wood, addWood, stone, addStone, people, getWorkers } = useResource();
   const { changeScore } = usePlayground();
 
   const [time, setTime] = useState(0);
@@ -51,32 +51,34 @@ export function Game() {
 
  //Augmentation de time de 1 chaque seconde
   useEffect(() => {
+    useResource.getState().initResource()
+    usePlayground.getState().initPlayground(5,5)
     const timer = setInterval(()=> setTime(prev => prev + 1),1000)
     return () => clearInterval(timer);
     }, []
   );
 
-  useEffect(() => {
-    useResource.getState().initResource()
-    usePlayground.getState().initPlayground(5,5)
-
-  }, []);
+  // useEffect(() => {
+  //   useResource.getState().initResource()
+  //   usePlayground.getState().initPlayground(5,5)
+  // }, []);
 
   //Toute les 10 secondes, on diminue la nourriture de people, et on regarde si on a perdu
   useEffect(() => {
       if (time % 10 === 0 && time != 0) {
-        addFood(- people)
-        //if(food - people < 0) { setTimeout(() => {onGameOver(time)}, 2)}
+        const foodPeople = getWorkers()['food'] ?? 0;
+        addFood(- people + 3*foodPeople)
         if(food - people < 0)   {
-          changeScore(time)
+          changeScore((time + wood + stone))
           navigate('/gameover');
         }
       }
-
       if (time % 5 === 0 && time != 0) {
-        const forestPeople = people - getAvailablePeople();
-        addFood(forestPeople);
-        addWood(forestPeople)
+        const forestPeople = getWorkers()['forest'] ?? 0;
+        const mountainPeople = getWorkers()['mountain'] ?? 0;
+        addFood(forestPeople + mountainPeople);
+        addWood(forestPeople);
+        addStone(mountainPeople);
       }
     }
     ,[time])
