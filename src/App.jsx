@@ -1,5 +1,6 @@
 
 import './App.css'
+import "@radix-ui/themes/styles.css";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useState } from 'react';
 import { Menu } from './pages/Home.jsx'
