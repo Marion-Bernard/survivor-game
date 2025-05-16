@@ -41,7 +41,7 @@ export function GameOver({ scoreBoard, updateScoreBoard}){
       </div>
       
       <div className="flex flex-row gap-4 pt-4 mx-auto">
-        <Button text='Rejouer' onClick={() => navigateTo('game')} color="light" />
+        <Button text='Rejouer' onClick={() => navigateTo('/game')} color="light" />
         <Button text='Retourner au menu' onClick={() => navigateTo('')} color="light" />
       </div> 
     </div>

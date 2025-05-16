@@ -3,9 +3,10 @@ import { useResource } from "./Resources";
 
 export const usePlayground = create((set, get) => ({
   playground: [],
+
+  /*****Volcans*****/
   volcano : 0,
   lastVolcanoEvent: null, // ou { timestamp, message }
-
   triggerVolcanoPopup: (message) => {
     set({
       lastVolcanoEvent: {
@@ -13,6 +14,17 @@ export const usePlayground = create((set, get) => ({
         message: message || "Une personne a péri dans un volcan 🌋"
       }
     });
+  },
+  resetVolcanoEvent: () => {
+    set({ lastVolcanoEvent: null });
+  },
+
+  /***** SAISONS ********/
+  
+  season : 'summer',
+  updateSeason : (season) => {
+    const newSeason = (season === 'summer' ? 'winter' : 'summer');
+     set ({season : newSeason})
   },
 
   generateRandomCell : (nb,type,playground) => {
@@ -28,12 +40,12 @@ export const usePlayground = create((set, get) => ({
         set(() => ({ volcano: 1 }));
         return get().generateRandomCell(1,'volcano', playground);
     } else {
+      set(()=> ({lastVolcanoEvent: null}));
+      set(() => ({ volcano: 0 }));
       return playground
     }
   }, 
-   resetVolcanoEvent: () => {
-      set({ lastVolcanoEvent: null });
-   },
+
   initPlayground: (row,col) => {
     let newPlayground = Array.from({ length: row }, () => Array.from({ length: col }, () => ({type: "empty", people: 0 })));
     newPlayground = get().generateRandomCell(2,'forest',newPlayground);
@@ -54,7 +66,7 @@ export const usePlayground = create((set, get) => ({
       useResource.getState().addWood(-5)
       useResource.getState().addPeople(2)
       updatedPlayground[position.y][position.x] = cell;
-    } else if ((cell.type !== 'house') && useResource.getState().getAvailablePeople() >= 1 ) {
+    } else if ((cell.type !== 'house' && cell.type !== 'empty') && useResource.getState().getAvailablePeople() >= 1 ) {
       cell.people += 1
       updatedPlayground[position.y][position.x] = cell;
     } else {
@@ -65,6 +77,8 @@ export const usePlayground = create((set, get) => ({
       playground: updatedPlayground})
     )
   },
+
+  /******SCORE ********/
   score:0,
   changeScore : (time) => {
     set(() => ({

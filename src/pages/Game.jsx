@@ -8,14 +8,13 @@ import { useResource} from "../store/Resources.js";
 import { usePlayground} from "../store/Playground.js";
 import { useNavigate } from "react-router-dom";
 import { VolcanoPopup } from "../components/Partials/Modals/VolcanoPopup.jsx";
+import { SeasonPopup } from "../components/Partials/Modals/SeasonPopup.jsx";
 
 export function Game() {
 
   const navigate = useNavigate();
-  
   const { food, addFood, wood, addWood, stone, addStone, people,addPeople, getWorkers} = useResource();
-  const { changeScore, volcano, triggerVolcanoPopup, resetVolcanoEvent} = usePlayground();
-
+  const { changeScore, volcano, triggerVolcanoPopup, resetVolcanoEvent, season, updateSeason} = usePlayground();
   const [time, setTime] = useState(0);
   const [quests, setQuests] = useState([
     {
@@ -61,31 +60,36 @@ export function Game() {
 
   //Toute les 10 secondes, on diminue la nourriture de people, et on regarde si on a perdu
   useEffect(() => {
-      if (time % 10 === 0 && time != 0) {
-        const foodPeople = getWorkers()['food'] ?? 0;
-        addFood(- people + 3*foodPeople);
-        
-        if(volcano > 0) {
-          addPeople(-volcano);
-          triggerVolcanoPopup();
-        }
 
-        if(food - people < 0 || people - volcano < 1)   {
-          changeScore((time + wood + stone));
-          resetVolcanoEvent();
-          navigate('/gameover');
-        }
-    
+    if (time % 10 === 0 && time != 0) {
+      const foodPeople = getWorkers()['food'] ?? 0;
+      addFood(- people + 3*foodPeople);
+      
+      if(volcano > 0) {
+        addPeople(-volcano);
+        triggerVolcanoPopup();
       }
-      if (time % 5 === 0 && time != 0) {
-        const forestPeople = getWorkers()['forest'] ?? 0;
-        const mountainPeople = getWorkers()['mountain'] ?? 0;
-        addFood(forestPeople + mountainPeople);
-        addWood(forestPeople);
-        addStone(mountainPeople);
+
+      if(food - people < 0 || people - volcano < 1)   {
+        changeScore((time + wood + stone));
+        resetVolcanoEvent();
+        navigate('/gameover');
       }
     }
-    ,[time])
+
+    if (time % 5 === 0 && time != 0) {
+      const forestPeople = getWorkers()['forest'] ?? 0;
+      const mountainPeople = getWorkers()['mountain'] ?? 0;
+      season === "summer" ? addFood(forestPeople + mountainPeople) : addFood(Math.min(2,forestPeople + mountainPeople));
+      addWood(forestPeople);
+      addStone(mountainPeople);
+    }
+
+    if (time % 20 === 0 && time != 0) {
+      updateSeason(season);
+    }
+  }
+  ,[time])
 
   function handleValidateQuest(questToUpdate) {
     setQuests(prevQuests =>
@@ -99,7 +103,7 @@ export function Game() {
 
   return (
     <div className="">
-      <Button text='Retourner au menu' onClick={()=> navigate("/")} color="light" iconSrc={ReturnIcon} />
+      <Button text='Retourner au menu' onClick={() => {navigate("/")}} color="light" iconSrc={ReturnIcon} />
       <div className="grid grid-cols-5 mt-4">
         <QuestList quests={quests} validateQuest={handleValidateQuest}/>
         <div className="col-span-4 flex flex-col items-center">
@@ -108,8 +112,12 @@ export function Game() {
             <p className="mb-4 font-bold text-center text-lg">Temps de survie : {time}s</p>
           </div>
           <Map />
+          {volcano > 0 && <p className="pt-2"> 💥Terrain volcanique: Tu perds 1 personnes toutes les 10 secondes! </p>}
         </div>
       </div>
-      <VolcanoPopup/>
+      <div className="flex flex-col">
+        <VolcanoPopup/>
+        <SeasonPopup time={time}/>
+      </div>
     </div>
 )}

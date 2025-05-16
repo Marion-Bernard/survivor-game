@@ -21,10 +21,10 @@ export function VolcanoPopup() {
   return (
     <Toast.Provider swipeDirection="right">
       <Toast.Root open={open} onOpenChange={setOpen} className="bg-red-500 text-white p-4 rounded">
-        <Toast.Title>💥 Éruption volcanique !</Toast.Title>
+        <Toast.Title className="font-bold">💥 Éruption volcanique !</Toast.Title>
         <Toast.Description>{message}</Toast.Description>
       </Toast.Root>
-      <Toast.Viewport className="fixed bottom-4 right-4 w-80" />
+      <Toast.Viewport className="fixed bottom-40 right-4 w-80" />
     </Toast.Provider>
   );
 }
