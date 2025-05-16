@@ -4,6 +4,17 @@ import { useResource } from "./Resources";
 export const usePlayground = create((set, get) => ({
   playground: [],
   volcano : 0,
+  lastVolcanoEvent: null, // ou { timestamp, message }
+
+  triggerVolcanoPopup: (message) => {
+    set({
+      lastVolcanoEvent: {
+        timestamp: Date.now(),
+        message: message || "Une personne a péri dans un volcan 🌋"
+      }
+    });
+  },
+
   generateRandomCell : (nb,type,playground) => {
     for (let i = 0 ; i < nb ; i++) {
       let x = Math.floor(Math.random() * playground.length);
@@ -20,6 +31,9 @@ export const usePlayground = create((set, get) => ({
       return playground
     }
   }, 
+   resetVolcanoEvent: () => {
+      set({ lastVolcanoEvent: null });
+   },
   initPlayground: (row,col) => {
     let newPlayground = Array.from({ length: row }, () => Array.from({ length: col }, () => ({type: "empty", people: 0 })));
     newPlayground = get().generateRandomCell(2,'forest',newPlayground);

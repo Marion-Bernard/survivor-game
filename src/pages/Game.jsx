@@ -7,13 +7,14 @@ import  ReturnIcon from "../assets/img/icons/utils/return.svg"
 import { useResource} from "../store/Resources.js";
 import { usePlayground} from "../store/Playground.js";
 import { useNavigate } from "react-router-dom";
+import { VolcanoPopup } from "../components/Partials/Modals/VolcanoPopup.jsx";
 
 export function Game() {
 
   const navigate = useNavigate();
   
   const { food, addFood, wood, addWood, stone, addStone, people,addPeople, getWorkers} = useResource();
-  const { changeScore, volcano } = usePlayground();
+  const { changeScore, volcano, triggerVolcanoPopup, resetVolcanoEvent} = usePlayground();
 
   const [time, setTime] = useState(0);
   const [quests, setQuests] = useState([
@@ -51,9 +52,9 @@ export function Game() {
 
  //Augmentation de time de 1 chaque seconde
   useEffect(() => {
-    useResource.getState().initResource()
-    usePlayground.getState().initPlayground(5,5)
-    const timer = setInterval(()=> setTime(prev => prev + 1),1000)
+    useResource.getState().initResource();
+    usePlayground.getState().initPlayground(5,5);
+    const timer = setInterval(()=> setTime(prev => prev + 1),1000);
     return () => clearInterval(timer);
     }, []
   );
@@ -62,14 +63,16 @@ export function Game() {
   useEffect(() => {
       if (time % 10 === 0 && time != 0) {
         const foodPeople = getWorkers()['food'] ?? 0;
-        addFood(- people + 3*foodPeople)
+        addFood(- people + 3*foodPeople);
         
         if(volcano > 0) {
-          addPeople(-volcano)
+          addPeople(-volcano);
+          triggerVolcanoPopup();
         }
 
         if(food - people < 0 || people - volcano < 1)   {
-          changeScore((time + wood + stone))
+          changeScore((time + wood + stone));
+          resetVolcanoEvent();
           navigate('/gameover');
         }
     
@@ -80,7 +83,6 @@ export function Game() {
         addFood(forestPeople + mountainPeople);
         addWood(forestPeople);
         addStone(mountainPeople);
-        console.log(volcano)
       }
     }
     ,[time])
@@ -103,10 +105,11 @@ export function Game() {
         <div className="col-span-4 flex flex-col items-center">
           <div>
             <ResourceBar />
-            <p className="mb-4 font-bold text-lg">Temps de survie : {time}s</p>
+            <p className="mb-4 font-bold text-center text-lg">Temps de survie : {time}s</p>
           </div>
           <Map />
         </div>
       </div>
+      <VolcanoPopup/>
     </div>
 )}

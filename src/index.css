@@ -1,9 +1,12 @@
 @import "tailwindcss";
 
-:root {
+div.radix-themes {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  padding : 20px;
+  max-width: 1280px;
+  margin : 0 auto;
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
@@ -13,4 +16,8 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  background-color: #ffbe4d;
 }

@@ -8,6 +8,7 @@ import { Game } from './pages/Game.jsx';
 import { GameOver } from './pages/GameOver.jsx';
 import { NotFound } from './pages/NotFound.jsx';
 
+
 function App() {
 
   const [scoreBoard, setScoreBoard] = useState([{name:'Marion',score:80}])
@@ -31,7 +32,6 @@ function App() {
         
       </Routes>
     </BrowserRouter>
-    // <div className='min-h-screen'>
   )
 }
 
