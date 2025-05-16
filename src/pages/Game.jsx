@@ -12,8 +12,8 @@ export function Game() {
 
   const navigate = useNavigate();
   
-  const { food, addFood, wood, addWood, stone, addStone, people, getWorkers } = useResource();
-  const { changeScore } = usePlayground();
+  const { food, addFood, wood, addWood, stone, addStone, people,addPeople, getWorkers} = useResource();
+  const { changeScore, volcano } = usePlayground();
 
   const [time, setTime] = useState(0);
   const [quests, setQuests] = useState([
@@ -58,20 +58,21 @@ export function Game() {
     }, []
   );
 
-  // useEffect(() => {
-  //   useResource.getState().initResource()
-  //   usePlayground.getState().initPlayground(5,5)
-  // }, []);
-
   //Toute les 10 secondes, on diminue la nourriture de people, et on regarde si on a perdu
   useEffect(() => {
       if (time % 10 === 0 && time != 0) {
         const foodPeople = getWorkers()['food'] ?? 0;
         addFood(- people + 3*foodPeople)
-        if(food - people < 0)   {
+        
+        if(volcano > 0) {
+          addPeople(-volcano)
+        }
+
+        if(food - people < 0 || people - volcano < 1)   {
           changeScore((time + wood + stone))
           navigate('/gameover');
         }
+    
       }
       if (time % 5 === 0 && time != 0) {
         const forestPeople = getWorkers()['forest'] ?? 0;
@@ -79,6 +80,7 @@ export function Game() {
         addFood(forestPeople + mountainPeople);
         addWood(forestPeople);
         addStone(mountainPeople);
+        console.log(volcano)
       }
     }
     ,[time])

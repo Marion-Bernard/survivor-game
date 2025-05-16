@@ -3,6 +3,7 @@ import { useResource } from "./Resources";
 
 export const usePlayground = create((set, get) => ({
   playground: [],
+  volcano : 0,
   generateRandomCell : (nb,type,playground) => {
     for (let i = 0 ; i < nb ; i++) {
       let x = Math.floor(Math.random() * playground.length);
@@ -11,11 +12,20 @@ export const usePlayground = create((set, get) => ({
     }
     return playground
   },
+  generateVolcano: (playground) => {
+    if ((Math.random()) < 0.9 ){
+        set(() => ({ volcano: 1 }));
+        return get().generateRandomCell(1,'volcano', playground);
+    } else {
+      return playground
+    }
+  }, 
   initPlayground: (row,col) => {
     let newPlayground = Array.from({ length: row }, () => Array.from({ length: col }, () => ({type: "empty", people: 0 })));
     newPlayground = get().generateRandomCell(2,'forest',newPlayground);
     newPlayground = get().generateRandomCell(1,'mountain',newPlayground);
     newPlayground = get().generateRandomCell(1,'food',newPlayground);
+    newPlayground = get().generateVolcano(newPlayground);
     set({ playground: newPlayground });
   },
 
