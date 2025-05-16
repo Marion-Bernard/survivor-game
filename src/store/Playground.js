@@ -13,7 +13,7 @@ export const usePlayground = create((set, get) => ({
     return playground
   },
   generateVolcano: (playground) => {
-    if ((Math.random()) < 0.9 ){
+    if ((Math.random()) < 0.4 ){
         set(() => ({ volcano: 1 }));
         return get().generateRandomCell(1,'volcano', playground);
     } else {
